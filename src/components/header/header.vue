@@ -37,24 +37,50 @@
         <img :src="seller.avatar" width="100%" height="100%">
       </div>
       <!--  浮层-->
-      <div v-show="detailShow" class="detail">
+      <div v-show="detailShow" class="detail" transition="fade">
         <div class="detail-wrapper clearfix">
           <div class="detail-main">
             <h1 class="name">{{seller.name}}</h1>
+            <div class="star-wrapper">
+              <star :size="48" :score="seller.score"></star>
+            </div>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">优惠信息</div>
+              <div class="line"></div>
+            </div>
+            <ul v-if="seller.supports" class="supports">
+              <li v-for="(item,index) in seller.supports" :key="index" class="support-item">
+                <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+                <span class="text">{{seller.supports[index].description}}</span>
+              </li>
+            </ul>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
+            </div>
+            <div class="bulletin">
+              <p class="content">{{seller.bulletin}}</p>
+            </div>
           </div>
         </div>
-        <div class="detail-close">
+        <div class="detail-close" @click="hideDetail">
           <i class="icon-close"></i>
         </div>
       </div>
     </div>
 </template>
 <script>
+import star from './../star/star'
 export default {
   data () {
     return {
       detailShow: false
     }
+  },
+  components: {
+    star
   },
   props: {
     seller: {
@@ -63,18 +89,20 @@ export default {
   },
   created() {
     this.classMap = [ 'decrease', 'discount', 'special', 'invoice', 'guarantee' ]
-    console.log('seller', this.seller)
   },
   methods: {
     // 展示浮层
     showDetail () {
       this.detailShow = true
+    },
+    hideDetail() {
+      this.detailShow = false
     }
   }
 }
 </script>
-<style lang="stylus" scoped>
-  @import '../../common/stylus/mixin'
+<style lang="stylus" rel="stylesheet/stylus">
+  @import '../../common/stylus/mixin.styl'
   .header
     color: #fff
     overflow: hidden
@@ -194,7 +222,15 @@ export default {
       width: 100%
       height: 100%
       overflow: auto
+      transition: all 0.5s
+      backdrop-filter: blur(10px)
       background: rgba(1, 17, 27, 0.8)
+      &.fade-trasition
+        opacity: 1
+        background: rgba(7, 17, 27, 0.8)
+      &.fade-enter, &.fade-leave
+        opacity: 0
+        background: rgba(7, 17, 27, 0)
       // FIXME: 底部固定套路， padding-bottom负值， margin-top为负值，占满同级元素内容的padding-bottom的空白
       .detail-wrapper
         min-height: 100%
@@ -208,6 +244,63 @@ export default {
             font-weight: 700
             color: rgb(255, 255, 255)
             line-height: 16px
+          .star-wrapper
+            margin-top: 16px
+            padding: 2px 0
+            text-align: center
+          .title
+            display: flex
+            width: 80%
+            margin: 28px auto 24px auto
+            .line
+              flex: 1
+              position: relative
+              width: auto
+              top: -6px
+              border-bottom: 1px solid rgba(255, 255, 255, 0.2)
+            .text
+              padding: 0 12px
+              font-size: 14px
+              font-weight: 700
+          .supports
+            width: 80%
+            margin: 0 auto
+            .support-item
+              padding: 0 12px
+              margin-bottom: 12px
+              font-size: 0
+              &:last-child
+                margin-bottom: 0
+              .icon
+                display: inline-block
+                width: 16px
+                height: 16px
+                vertical-align: top
+                margin-right: 6px
+                background-size: 16px 16px
+                background-repeat: no-repeat
+                &.decrease
+                  bg-image('./decrease_2')
+                &.discount
+                  bg-image('./discount_2')
+                &.special
+                  bg-image('./special_2' )
+                &.guarantee
+                  bg-image('./guarantee_2')
+                &.invoice
+                  bg-image('./invoice_2')
+              .text
+                line-height: 16px
+                font-size: 12px
+          .bulletin
+            width: 80%
+            margin: 0 auto
+            .content
+              padding: 0 12px
+              font-size: 12px
+              font-weight: 200
+              color: rgb(255, 255, 255)
+              line-height: 24px
       .detail-close
         position: relative
         width: 32px

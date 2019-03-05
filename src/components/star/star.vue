@@ -1,6 +1,6 @@
 <template>
   <div class="star" :class="starType">
-    <span v-for="itemClass in itemClasses" :class="itemClass" class="star-item" :key="itemClass"></span>
+    <span v-for="(itemClass,index) in itemClasses" :class="itemClass" class="star-item" :key="index" ></span>
   </div>
 </template>
 <script>
@@ -22,26 +22,27 @@ export default {
       return 'star-' + this.size
     },
     itemClasses () {
-      let reuslt = []
-      let score = Math.floor(this.score*2) / 2
+      let result = []
+      let score = Math.floor(this.score * 2) / 2
       let hasDecimal = score % 1 !== 0
       let integer = Math.floor(score)
-      for(let i = 0; i < integer; i++) {
+      for (let i = 0; i < integer; i++) {
         result.push(CLS_ON)
       }
 
-      if( hasDecimal) {
+      if (hasDecimal) {
         result.push(CLS_HALF)
       }
-      while(result.length <CLS_OFF)
+      while (result.length < LENGTH) {
+        result.push(CLS_OFF)
+      }
       return result
     }
   }
 }
-//TODO: 6-12
 </script>
-<style lang="stylus" scoped>
-  @import '../../commom/stylus/mixin.styl'
+<style lang="stylus" rel="stylesheet/stylus">
+  @import '../../common/stylus/mixin.styl'
   .star
     .star-item
       display: inline-block
