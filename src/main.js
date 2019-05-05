@@ -9,6 +9,10 @@ import VueResource from 'vue-resource'
 import './common/stylus/index.styl'
 Vue.config.productionTip = false
 Vue.use(VueResource)
+
+//  引入过滤器
+import filters from './filters'
+Vue.use(filters)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
